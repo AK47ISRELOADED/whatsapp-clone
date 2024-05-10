@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Whatsapp</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  </head>
+  <body>
+   <div id="main">
+    <div id="left">
+      <div id="nav">
+        <div id="key">
+          <img src="<%= currentUser.image %>" alt="">
+          <i class="ri-team-fill"></i>
+          <i class="ri-donut-chart-fill"></i>
+          <i class="ri-chat-new-fill"></i>
+          <i class="ri-menu-3-line"></i>
+        </div>
+        <div id="search">
+          <form action="/search" method="post">
+            <i class="ri-search-line"></i>
+            <input type="text" placeholder="search" name="search">
+
+          </form>
+        </div>
+      </div>
+     <div id="chats">
+    
+   <% allusers.forEach(user=>{ %>
+    <% if(currentUser.username == user.username){ %>
+      <div id="card" style="display: none;">
+        <img src="<%= user.image %>" alt="">
+        <h1><%= user.username %></h1>
+       </div>
+  <%  } else{ %>
+   <a href="/chats/<%= user._id  %>"> <div id="card">
+    <img src="<%= user.image %>" alt="">
+    <h1><%= user.username %></h1>
+   </div></a>
+<%  } %>
+   <% }) %>
+    
+       </div>
+     
+        
+    
+    </div>
+    <div id="right">
+      <div id="center">
+        <img src="/images/PngItem_827280.png" alt="">
+        <h1>WhatsApp for windows</h1>
+        <h5>send and receive message without keeping your phone online</h5>
+        <h5>use WhatsApp on upto 4 linked devices and 1 phone at the same time</h5>
+      </div>
+      <h4><i class="ri-lock-line"></i> end to end encrypted</h4>
+    </div>
+   </div>
+
+   
+
+
+  
+   <script>
+    
+   
+   </script>
+  </body>
+</html>

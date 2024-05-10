@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Whatsapp</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+  </head>
+  <body>
+   <div id="main">
+    <div id="left">
+      <div id="nav">
+        <div id="key">
+          <img src="<%= currentUser.image %>" alt="">
+          <h3><%= currentUser.username %></h3>
+          <i class="ri-team-fill"></i>
+          <i class="ri-donut-chart-fill"></i>
+          <i class="ri-chat-new-fill"></i>
+          <i class="ri-menu-3-line"></i>
+        </div>
+        <div id="search">
+          <form action="/search" method="post">
+            <i class="ri-search-line"></i>
+            <input type="text" placeholder="search" name="search">
+
+          </form>
+        </div>
+      </div>
+     <div id="chats">
+    
+   <% allusers.forEach(user=>{ %>
+    <% if(currentUser.username == user.username){ %>
+      <div id="card" style="display: none;">
+        <img src="<%= user.image %>" alt="">
+        <h1><%= user.username %></h1>
+       </div>
+  <%  } else{ %>
+   <a href="/chats/<%= user._id  %>"> <div id="card">
+    <img src="<%= user.image %>" alt="">
+    <h1><%= user.username %></h1>
+   </div></a>
+<%  } %>
+   <% }) %>
+    
+       </div>
+     
+        
+    
+    </div>
+    <div id="right">
+      <div id="rnav">
+        <img src="<%= reciever.image %>" alt="">
+        <h3><%= reciever.username %></h3>
+        <i class="ri-team-fill"></i>
+        <i class="ri-donut-chart-fill"></i>
+        <i class="ri-chat-new-fill"></i>
+        <i class="ri-menu-3-line"></i>
+      </div>
+      <div id="messages">
+       
+
+        <% allmsg.forEach(msg=>{ %>
+          <% if(msg.sender_id.toHexString() === currentUser._id.toHexString()){ %>
+            
+            <h1 style="text-align: right; color: cornflowerblue;" ><%= msg.message %></h1>
+
+        <%  } else if( msg.sender_id.toHexString() == reciever._id.toHexString()  ){ %>
+
+          <h1 style="color: red; text-align: left;"><%= msg.message %></h1>
+
+       <% } else{ %>
+        
+        <h1 style="display: none;"><%= msg.message %></h1> 
+
+      <% }%>
+
+         <%   }) %>
+
+      </div>
+      <div id="message-sender">
+        <form action="/send-msg/<%= reciever._id %>/<%= currentUser._id %>" method="post">
+          <i class="ri-chat-new-fill"></i>
+          <i class="ri-menu-3-line"></i>
+          <input  type="text" name="message" id="message-inp">
+          <button id="send-button" type="submit"><i class="ri-send-plane-2-line"></i></button>
+        </form>
+      </div>
+    </div>
+
+
+
+
+
+
+
+   </div>
+
+   
+
+
+  
+   <script src="/socket.io/socket.io.js"></script>
+   <script>
+        
+       var socket = io();
+    document.querySelector('#send-button').addEventListener('click',function(eve){
+      eve.preventDefault()
+      console.log('heyyy');
+      var newMsg = `<div class="msg text-light ms-auto" style="width: fit-content;">
+                           <h2 style="text-align: right;color: cornflowerblue; padding: 5px 10px; border-radius: 5px; ">${document.querySelector('#message-inp').value}</h2>
+                         </div>`
+
+       socket.emit("senderMsg", document.querySelector('#message-inp').value)      
+       
+       document.querySelector('#message-inp').value = ''               
+          document.querySelector("#messages").innerHTML += newMsg                
+
+    });
+
+    function receivedMessage(msg){
+          var newMsg = `<div class="msg text-light" style="width: fit-content;">
+              <h2 style="text-align: left;color: green; background-color: rgb(3, 74, 3); padding: 5px 10px; border-radius: 5px;">${msg}</h2>
+            </div>`         
+          document.querySelector("#messages").innerHTML += newMsg         
+        }
+
+        socket.on("senderMsg", function(msg){
+          receivedMessage(msg)
+        })
+
+   </script>
+  </body>
+</html>
